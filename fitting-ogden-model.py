@@ -127,14 +127,14 @@ def plot_data(x, y_exp, y_pred, case, title):
     #  plot fitted models
     for j in range(len(y_pred)):
         k = j % 2  # idx of x, either 0 or 1
-        source = "paper" if j < 2 else "Opt"
+        source = "paper" if j < 2 else "thiswork"
         plt.plot(x[k], y_pred[j], color=f"C{j}",
                  label=r"$p_1^{{{0}}}$ ({1})".format(case[k], source))
 
     # set up
     plt.grid(0.25)
     plt.legend(loc='lower right')
-    type = "paper" if len(y_pred) < 3 else "opt"
+    type = "paper" if len(y_pred) < 3 else "thiswork"
     plt.savefig(f'ogden3_{type}.png', dpi=300)
     return None
 
