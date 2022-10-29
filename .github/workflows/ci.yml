@@ -1,0 +1,30 @@
+# This workflow will install Python dependencies, run the parameters identification codes.
+name: CI for fitting model parameters
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip3 install flake8 pytest jaxlib==0.3.22 jaxopt==0.5.5 matplotlib
+        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Test with files
+      run: |
+        python fitting-ogden-model.py  
