@@ -72,11 +72,8 @@ def loss_func(params, x_data, y_data):
     # losses
     loss1 = jnp.mean((puc_pred - y_data[0])**2)
     loss2 = jnp.mean((pbc_pred - y_data[1])**2)
-    # parameters' constraints
-    const1 = jax.nn.relu(jnp.sum(μ))
-    const2 = jax.nn.relu(K0)
     # Use parameters' constraints as regularization terms
-    losses = loss1 + loss2 + 1e-5 * (const1 + const2)
+    losses = loss1 + loss2 - 2e-5 * (jnp.sum(μ) + K0)
     return losses
 
 
@@ -142,9 +139,9 @@ def plot_data(x, y_exp, y_pred, case, title):
 # Experimental data (Table 1, 152) [A. Kossa, 2016]
 # doi.org/10.1016/j.polymertesting.2016.05.014
 # Uniaxial compression
-expUA = pd.read_csv('UAexp_polyethylene_foam.csv', index_col=False)
+expUA = pd.read_csv('data/UAexp_polyethylene_foam.csv', index_col=False)
 # Biaxial compression
-expBA = pd.read_csv('BAexp_polyethylene_foam.csv', index_col=False)
+expBA = pd.read_csv('data/BAexp_polyethylene_foam.csv', index_col=False)
 
 # stretches in the loading direction
 λuc = jnp.array(expUA['λ_UAexp'].values)
@@ -189,18 +186,17 @@ print('R2 accuracy of BC (paper)', r2bc)
 x_data = [λuc_vec, λbc_vec]
 y_data = [puc_vec, pbc_vec]
 
-# Initialize params
-key = jax.random.PRNGKey(2022)
-params0 = jax.random.uniform(key, (9,))
+# Initialise params
+# key = jax.random.PRNGKey(2022)
+# params0 = jax.random.uniform(key, (9,))
 
 # Use the ones from [Berezvai, 2016] as initial guess
-# params0 = params_Berezvai
+params0 = params_Berezvai
 
 start = time.time()
 optimizer = opt.ScipyMinimize(method='BFGS', fun=loss_func,
-                              tol=10e-12, maxiter=1000)
+                              tol=10e-15, maxiter=1000)
 opt_para = optimizer.run(params0, x_data=x_data, y_data=y_data).params
-
 print(f"\noptimization time: {time.time() - start}")
 print(f"Optimized para: \n {opt_para.reshape(3,3)}")
 
