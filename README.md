@@ -28,6 +28,12 @@ docker run -ti --name test-fiting -v $(pwd):/home/works fit-model-params bin/bas
 # change dir. to works
 cd /home/works
 ```
+---
+Tips:
+
+If [Visual Studio Code](https://code.visualstudio.com/download) is used, it will work well with the [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker), after build the image and run the container, click on the "Docker extension" ([hint](https://www.youtube.com/watch?v=5s6M4w7ucUI))/ right-click on the container and choose `Attach Visual Studio Code` -> start working
+
+---
 ## Usage
 Run non-linear optimisation to fit parameters of Ogden model:
 ```bash
