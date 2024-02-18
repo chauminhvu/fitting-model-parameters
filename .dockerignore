@@ -1,0 +1,5 @@
+.github
+.cache
+*.md
+*.png
+.gitignore

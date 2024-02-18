@@ -1,0 +1,24 @@
+# Create multi-stage builds to reduce size of final image
+# Builder stage
+FROM python:3.12.2-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Install dependencies
+COPY ./requirements /builder/
+# Install dependencies to the local user directory (eg. /root/.local)
+RUN pip3 install --upgrade --user -r /builder/requirements-cpu.txt
+
+# Final stage
+FROM python:3.12.2-slim
+WORKDIR /home/fitting-model
+
+# copy only the dependencies installation from the 1st stage image
+COPY --from=builder /root/.local /root/.local
+# update PATH environment variable
+ENV PATH=/root/.local:$PATH
+
+# Copy the directory to image
+COPY . /home/fitting-model
+
+CMD ["/bin/bash"]
